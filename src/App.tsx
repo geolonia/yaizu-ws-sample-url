@@ -28,7 +28,7 @@ const App = () => {
   const [shopList, setShopList] = React.useState<Pwamap.ShopData[]>([])
 
   React.useEffect(() => {
-    fetch(config.data_url)
+    fetch(`${config.data_url}&timestamp=${new Date().getTime()}`)
     .then((response) => {
       return response.ok ? response.text() : Promise.reject(response.status);
     })
