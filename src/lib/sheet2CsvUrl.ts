@@ -1,12 +1,8 @@
-export const extractSheetUrl = (url: string): string => {
-  const match = url.match(/url=([^&]+)/);
-  return match ? decodeURIComponent(match[1]) : '';
-}
 
-export const sheetUrl2CsvUrl = (sheetUrl: string): string => {
+export const sheetUrl2CsvUrl = (sheetUrl: string | null): string | null => {
 
   if (!sheetUrl) {
-    return ''
+    return null;
   }
 
   const fileId = sheetUrl.match(/\/d\/([^/]+)/)?.[1]

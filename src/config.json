@@ -1,8 +1,8 @@
 {
-  "title": null,
-  "description": null,
-  "data_url": null,
-  "form_url": null,
+  "title": "焼津市PWAマップ",
+  "description": "",
+  "data_url": "",
+  "form_url": "",
   "logo_image_url": "https://geoloniamaps.github.io/pwamap/icon-pwamap.svg",
   "background_image_url": "https://geoloniamaps.github.io/pwamap/geolonia_bgimage_1920_1080.png",
   "primary_color": "#032857",

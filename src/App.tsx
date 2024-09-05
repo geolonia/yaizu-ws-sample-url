@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.scss";
 
 import Home from './App/Home'
@@ -9,13 +9,9 @@ import Category from './App/Category'
 import Images from './App/Images'
 
 import Tabbar from './App/Tabbar'
-import config from "./config.json";
 import Papa from 'papaparse'
-import { extractSheetUrl, sheetUrl2CsvUrl } from "./lib/sheet2CsvUrl";
-import { addQueryToHashUrl } from "./lib/addQueryToHashUrl";
-
-// You can see config.json after running `npm start` or `npm run build`
-// import config from './config.json'
+import { sheetUrl2CsvUrl } from "./lib/sheet2CsvUrl";
+import config from './config.json'
 
 const sortShopList = async (shopList: Pwamap.ShopData[]) => {
 
@@ -29,74 +25,85 @@ const sortShopList = async (shopList: Pwamap.ShopData[]) => {
 const App = () => {
   const [shopList, setShopList] = React.useState<Pwamap.ShopData[]>([])
 
+  const location = useLocation();
+
   React.useEffect(() => {
 
-    // クエリ文字列を取得
-    const url = window.location.href;
-    let sheetUrl:string | null = extractSheetUrl(url)
+    const fetchData = async () => {
 
-    if (!sheetUrl) {
-      // 入力させるアラート
-      sheetUrl = prompt('GoogleスプレッドシートのURLを入力してください。')
-      if (!sheetUrl) {
+      const query = location.search
+      const sheetUrl = new URLSearchParams(query).get('url')
+      const invalidURLMessage = 'スプレッドシートのURL形式間違っているか、スプレッドシートが公開されていない可能性があります。'
+
+      const csvUrl = sheetUrl2CsvUrl(sheetUrl);
+
+      if (!csvUrl) {
+        alert('クエリ文字列に、Googleスプレッドシートの URL を指定して下さい（例：/#/?url=<GoogleスプレッドシートのURL> ')
         return
       }
 
-      addQueryToHashUrl('url', sheetUrl)
+      try {
+        const responseCSV = await fetch(`${csvUrl}&timestamp=${new Date().getTime()}`)
+        if (!responseCSV.ok) {
+          alert(invalidURLMessage);
+          return;
+        }
+        const csvString = await responseCSV.text();
+        Papa.parse(csvString, {
+          header: true,
+          complete: (results) => {
+            const features = results.data
+
+            const nextShopList: Pwamap.ShopData[] = []
+            for (let i = 0; i < features.length; i++) {
+              const feature = features[i] as Pwamap.ShopData
+              if (!feature['緯度'] || !feature['経度'] || !feature['スポット名']) {
+                continue;
+              }
+              if (!feature['緯度'].match(/^[0-9]+(\.[0-9]+)?$/)) {
+                continue
+              }
+              if (!feature['経度'].match(/^[0-9]+(\.[0-9]+)?$/)) {
+                continue
+              }
+              const shop = {
+                // @ts-ignore
+                index: i,
+                ...feature
+              }
+
+              nextShopList.push(shop)
+            }
+            sortShopList(nextShopList).then((sortedShopList) => {
+              setShopList(sortedShopList)
+            })
+          }
+        });
+      } catch (error) {
+        alert(invalidURLMessage);
+        return;
+      }
+
+      try {
+        const responseSheet = await fetch(`${sheetUrl}&timestamp=${new Date().getTime()}`)
+        if (!responseSheet.ok) {
+          alert(invalidURLMessage);
+          return;
+        }
+        const htmlString = await responseSheet.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        const ogTitleMeta = doc.querySelector('meta[property="og:title"]');
+        const ogTitle = ogTitleMeta && ogTitleMeta.getAttribute('content');
+        config.title = ogTitle || '焼津市PWAマップ'
+      } catch (error) {
+        alert(invalidURLMessage)
+        return;
+      }
     }
 
-    fetch(`${sheetUrl}&timestamp=${new Date().getTime()}`)
-    .then((response) => {
-      return response.ok ? response.text() : Promise.reject(response.status);
-    })
-    .then((data) => {
-      const titleHtml = data.match(/<title>(.*?)<\/title>/)
-      const titleRaw = titleHtml?.[1]
-      const title = titleRaw ? titleRaw.replace(' - Google スプレッドシート', '') : '焼津市PWAマップ'
-      // @ts-ignore
-      config.title = title
-      document.title = title
-    })
-
-    const csvUrl = sheetUrl2CsvUrl(sheetUrl)
-    fetch(`${csvUrl}&timestamp=${new Date().getTime()}`)
-    .then((response) => {
-      return response.ok ? response.text() : Promise.reject(response.status);
-    })
-    .then((data) => {
-      Papa.parse(data, {
-        header: true,
-        complete: (results) => {
-          console.log('results', results)
-          const features = results.data
-
-          const nextShopList: Pwamap.ShopData[] = []
-          for (let i = 0; i < features.length; i++) {
-            const feature = features[i] as Pwamap.ShopData
-            if (!feature['緯度'] || !feature['経度'] || !feature['スポット名']) {
-              continue;
-            }
-            if (!feature['緯度'].match(/^[0-9]+(\.[0-9]+)?$/)) {
-              continue
-            }
-            if (!feature['経度'].match(/^[0-9]+(\.[0-9]+)?$/)) {
-              continue
-            }
-            const shop = {
-              // @ts-ignore
-              index: i,
-              ...feature
-            }
-
-            nextShopList.push(shop)
-          }
-          sortShopList(nextShopList).then((sortedShopList) => {
-            setShopList(sortedShopList)
-          })
-        }
-      });
-    });
-  }, [])
+    fetchData()
+  }, [location.search])
 
 
   return (
