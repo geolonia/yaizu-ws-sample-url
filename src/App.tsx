@@ -58,8 +58,7 @@ const App = () => {
     })
 
     const csvUrl = sheetUrl2CsvUrl(sheetUrl)
-    const dataUrl = csvUrl ? csvUrl : config.data_url
-    fetch(`${dataUrl}&timestamp=${new Date().getTime()}`)
+    fetch(`${csvUrl}&timestamp=${new Date().getTime()}`)
     .then((response) => {
       return response.ok ? response.text() : Promise.reject(response.status);
     })

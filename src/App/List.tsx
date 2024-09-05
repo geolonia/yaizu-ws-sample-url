@@ -50,7 +50,6 @@ const Content = (props: Props) => {
   const [hasMore, setHasMore] = React.useState(true);
 
   const [searchParams] = useSearchParams();
-  console.log({searchParams})
   const queryCategory = searchParams.get('category')
 
   React.useEffect(() => {
