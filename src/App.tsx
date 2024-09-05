@@ -37,8 +37,7 @@ const App = () => {
       const csvUrl = sheetUrl2CsvUrl(sheetUrl);
 
       if (!csvUrl) {
-        alert('クエリ文字列に、Googleスプレッドシートの URL を指定して下さい（例：/#/?url=<GoogleスプレッドシートのURL> ')
-        return
+        // alert('クエリ文字列に、Googleスプレッドシートの URL を指定して下さい（例：/#/?url=<GoogleスプレッドシートのURL> ')
       }
 
       try {
