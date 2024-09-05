@@ -53,6 +53,7 @@ const App = () => {
       const titleHtml = data.match(/<title>(.*?)<\/title>/)
       const titleRaw = titleHtml?.[1]
       const title = titleRaw ? titleRaw.replace(' - Google スプレッドシート', '') : '焼津市PWAマップ'
+      // @ts-ignore
       config.title = title
       document.title = title
     })
