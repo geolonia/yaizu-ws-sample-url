@@ -94,6 +94,7 @@ const App = () => {
         const ogTitleMeta = doc.querySelector('meta[property="og:title"]');
         const ogTitle = ogTitleMeta && ogTitleMeta.getAttribute('content');
         config.title = ogTitle || '焼津市PWAマップ'
+        document.title = config.title
       } catch (error) {
         alert(invalidURLMessage)
         return;
