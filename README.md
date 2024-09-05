@@ -16,8 +16,11 @@ https://geolonia.github.io/yaizu-ws-sample-url/#/?url=https://docs.google.com/sp
 ![スクリーンショット 2024-09-05 18 34 05](https://github.com/user-attachments/assets/5604aa22-6830-4a20-b8a5-a4078ec4620a)
 
 
-URLを取得して、`?url=<Google スプレッドシートのURL>`でURLに追加して下さい。
-※ 注意: URLは共有URLではなくブラウザのURLを使用して下さい
+
+URLを取得して、`?url=<Google スプレッドシートのURL>`でURLに追加して下さい。  
+**※ 注意: URLは共有URLではなくブラウザのURLを使用して下さい**
+
+
 ![スクリーンショット 2024-09-05 18 38 34](https://github.com/user-attachments/assets/8a9b1b77-513d-436d-9b2c-ce1de3b521fe)
 
 
