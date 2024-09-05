@@ -28,15 +28,38 @@ const App = () => {
   const [shopList, setShopList] = React.useState<Pwamap.ShopData[]>([])
 
   React.useEffect(() => {
-    fetch(`${config.data_url}&timestamp=${new Date().getTime()}`)
+
+    // クエリ文字列を取得
+    const url = window.location.href;
+    const match = url.match(/url=([^&]+)/);
+    const sheetUrl = match ? decodeURIComponent(match[1]) : null;
+    const urlArray = sheetUrl?.split('/')
+    const fileId = urlArray?.[5]
+    const gid = sheetUrl?.split('gid=')[1]
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${fileId}/export?format=csv&gid=${gid}`
+
+    fetch(`${sheetUrl}&timestamp=${new Date().getTime()}`)
     .then((response) => {
       return response.ok ? response.text() : Promise.reject(response.status);
     })
     .then((data) => {
+      const titleHtml = data.match(/<title>(.*?)<\/title>/)
+      const titleRaw = titleHtml?.[1]
+      const title = titleRaw ? titleRaw.replace(' - Google スプレッドシート', '') : '焼津市PWAマップ'
+      config.title = title
+      document.title = title
+    })
 
+    const dataUrl = csvUrl ? csvUrl : config.data_url
+    fetch(`${dataUrl}&timestamp=${new Date().getTime()}`)
+    .then((response) => {
+      return response.ok ? response.text() : Promise.reject(response.status);
+    })
+    .then((data) => {
       Papa.parse(data, {
         header: true,
         complete: (results) => {
+          console.log('results', results)
           const features = results.data
 
           const nextShopList: Pwamap.ShopData[] = []
