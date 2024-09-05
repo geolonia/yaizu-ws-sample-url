@@ -1,64 +1,25 @@
 # Geolonia PWAマップ
 
-## Geolonia PWAマップ について
+以下のようにクエリパラメータにGoogle スプレッドシートのURLを指定することでデータを読み込んで表示できます。
 
-Geolonia PWA は、GitHub と Google Sheets を使って、素早く PWA の地図アプリが作れるテンプレートです。
-
-## フォーク
-
-まず、以下のリポジトリをフォークしてください。
-https://github.com/geoloniamaps/pwamap
-
-
-## サイト全体の設定
-
-`config.yml` を書き換えることでサイト全体の設定を変更できます。
-
-設定の例:
 ```
-title: Geolonia PWAマップ
-description: Google スプレッドシートを更新するだけでオリジナルの地図アプリを作成できる\n「Geolonia PWAマップ」
-data_url: https://docs.google.com/spreadsheets/d/1_m8s4P5tdSeam3nzC5ruSfuvtSejQKEX1FiBeOWJN3E/pub?gid=1957425126&single=true&output=csv
-form_url: ""
-logo_image_url: https://geoloniamaps.github.io/pwamap/icon-pwamap.svg
-background_image_url: https://geoloniamaps.github.io/pwamap/geolonia_bgimage_1920_1080.png
-primary_color: "#d2691e"
-orderby: distance
+https://geolonia.github.io/yaizu-ws-sample-url/#/?url=<Google スプレッドシートのURL>
 ```
 
-- `title`: サイトのタイトルです。
-- `description`: サイトの概要文です。
-- `data_url`: アプリで読み込む CSV データまでの URL を記述してください。SSL は必須です。
-- `form_url`: データの追加/更新用の申請フォームの URL を記述してください。
-- `logo_image_url`: PCで表示した時のロゴ画像の URL を記述してください。
-- `background_image_url`: PCで表示した時の背景画像の URL を記述してください。
-- `primary_color`: サイトのテーマカラーを記述してください。（例: `#d2691e`）
-- `orderby`: 一覧ページのデータの並び順を指定します。`distance` で距離順に並び替えます。`time` で新着順に並び替えます。
+例 
+https://geolonia.github.io/yaizu-ws-sample-url/#/?url=https://docs.google.com/spreadsheets/d/1MLQnXpk2Fhp6DN2l4gZUCKCzw_gP_wmfi9c2JKgH8UA/edit?gid=1957425126#gid=1957425126
 
-## スポットデータについて
+### Google スプレッドシートの 設定
 
-スポットは CSV 以下の方法でスポットデータファイルを作成して、`config.yml` にその CSV までの URL を設定してください。  
+スプレッドシートの共有設定を「リンクを知っている全員」に変更して下さい。
 
-- `緯度`、`経度`、`スポット名`、`カテゴリ` のみが必須で、これらのどれか一つでも入力されていないとアプリ上には表示されません。
-- なお、データは AJAX で常時読み込んでいますので、CSV が編集されるとほぼ同時にアプリ側にも反映されると考えてください。（キャッシュで多少タイムラグがあります。）
-
-### Google スプレッドシートを使う方法
-以下のスプレッドシートをコピーしてください。
-
-https://docs.google.com/spreadsheets/d/1_m8s4P5tdSeam3nzC5ruSfuvtSejQKEX1FiBeOWJN3E/edit?usp=sharing
-
-次に共有設定を行ってください。
-
-<img width="80%" alt="" src="https://github.com/user-attachments/assets/8a2f5031-ae90-4dd4-a2f1-4c2a1db70f42">
+![スクリーンショット 2024-09-05 18 34 05](https://github.com/user-attachments/assets/5604aa22-6830-4a20-b8a5-a4078ec4620a)
 
 
-Webへの公開設定で、「スポットデータ」シートを選択し、「カンマ区切り（.csv）」を選択して公開して下さい。
+URLを取得して、`?url=<Google スプレッドシートのURL>`でURLに追加して下さい。
+※ 注意: URLは共有URLではなくブラウザのURLを使用して下さい
 
-
-<img width="80%" alt="" src="https://github.com/user-attachments/assets/7c437ceb-21a3-4f06-9abc-5f798c7ba44a">
-
-公開をクリックし、表示された URL を `config.yml` の `data_url` に指定して下さい。  
-GitHub Pages の設定をし、 コミットするとデータが反映されます。
+![スクリーンショット 2024-09-03 19 12 00](https://github.com/user-attachments/assets/0b4d841f-fa28-459a-bb2d-f6517453e451)
 
 ## 開発
 
