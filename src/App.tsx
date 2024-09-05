@@ -11,6 +11,8 @@ import Images from './App/Images'
 import Tabbar from './App/Tabbar'
 import config from "./config.json";
 import Papa from 'papaparse'
+import { extractSheetUrl, sheetUrl2CsvUrl } from "./lib/sheet2CsvUrl";
+import { addQueryToHashUrl } from "./lib/addQueryToHashUrl";
 
 // You can see config.json after running `npm start` or `npm run build`
 // import config from './config.json'
@@ -31,12 +33,17 @@ const App = () => {
 
     // クエリ文字列を取得
     const url = window.location.href;
-    const match = url.match(/url=([^&]+)/);
-    const sheetUrl = match ? decodeURIComponent(match[1]) : null;
-    const urlArray = sheetUrl?.split('/')
-    const fileId = urlArray?.[5]
-    const gid = sheetUrl?.split('gid=')[1]
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${fileId}/export?format=csv&gid=${gid}`
+    let sheetUrl:string | null = extractSheetUrl(url)
+
+    if (!sheetUrl) {
+      // 入力させるアラート
+      sheetUrl = prompt('GoogleスプレッドシートのURLを入力してください。')
+      if (!sheetUrl) {
+        return
+      }
+
+      addQueryToHashUrl('url', sheetUrl)
+    }
 
     fetch(`${sheetUrl}&timestamp=${new Date().getTime()}`)
     .then((response) => {
@@ -50,6 +57,7 @@ const App = () => {
       document.title = title
     })
 
+    const csvUrl = sheetUrl2CsvUrl(sheetUrl)
     const dataUrl = csvUrl ? csvUrl : config.data_url
     fetch(`${dataUrl}&timestamp=${new Date().getTime()}`)
     .then((response) => {
