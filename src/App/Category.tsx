@@ -1,6 +1,6 @@
 import React from "react";
 import Select from 'react-select'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Category.scss'
 
 type Props = {
@@ -10,6 +10,8 @@ type Props = {
 const Content = (props: Props) => {
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentSearchParams = new URLSearchParams(location.search);
 
   const [categoryList, setCategoryList] = React.useState<string[]>([]);
 
@@ -42,7 +44,11 @@ const Content = (props: Props) => {
             <Select
               onChange={(e) => {
                 if (e) {
-                  navigate(`/list?category=${e.value}`);
+                  currentSearchParams.set('category', e.value);
+                  navigate({
+                    pathname: '/list',
+                    search: `?${currentSearchParams.toString()}`,
+                  });
                 }
               }}
               options={
