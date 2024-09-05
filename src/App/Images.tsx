@@ -10,7 +10,7 @@ type Props = {
 const Content = (props: Props) => {
 
   const { data } = props;
-  const [validImageList, setValidImageList ] = useState<JSX.Element[]>([]);
+  const [validImageList, setValidImageList] = useState<JSX.Element[]>([]);
   const [shop, setShop] = useState<Pwamap.ShopData | undefined>()
 
   const popupHandler = (shop: Pwamap.ShopData) => {
@@ -61,9 +61,14 @@ const Content = (props: Props) => {
       <div className="head"></div>
       <div className="images">
         <div className="container">
-          <ImageList id="mui-image-list" sx={{ width: "100%", height: "100%" }} cols={2} rowHeight={164}>
-            {validImageList}
-          </ImageList>
+          {
+            validImageList.length === 0 ?
+              <div className="no-image">画像のあるデータがありません</div>
+              :
+              <ImageList id="mui-image-list" sx={{ width: "100%", height: "100%" }} cols={2} rowHeight={164}>
+                {validImageList}
+              </ImageList>
+          }
           {shop ?
             <Shop shop={shop} close={closeHandler} />
             :

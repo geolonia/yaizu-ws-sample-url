@@ -16,7 +16,7 @@ const Content = () => {
         <li><Link to={{ pathname: "/", search: currentSearch}}><div className="icon"><FaHome /></div><div className="text">ホーム</div></Link></li>
         <li><Link to={{ pathname: "/list", search: currentSearch}}><div className="icon"><FaList /></div><div className="text">一覧</div></Link></li>
         <li><Link to={{ pathname: "/category", search: currentSearch}}><div className="icon"><FaSearch /></div><div className="text">カテゴリ</div></Link></li>
-        <li><Link to={{ pathname: "/images", search: currentSearch}}><div className="icon"><FaCamera /></div><div className="text">写真から探す</div></Link></li>
+        {/* <li><Link to={{ pathname: "/images", search: currentSearch}}><div className="icon"><FaCamera /></div><div className="text">写真から探す</div></Link></li> */}
         <li><Link to={{ pathname: "/about", search: currentSearch}}><div className="icon"><AiOutlineAppstore /></div><div className="text">マップについて</div></Link></li>
       </ul>
     </div>
